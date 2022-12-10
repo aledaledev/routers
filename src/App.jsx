@@ -11,6 +11,7 @@ import FoundersPage from './pages/FoundersPage'
 import LandingPage from './pages/LandingPage'
 import Admin from './pages/Admin'
 import AnalyticsPage from './pages/AnalyticsPage' 
+import ProtectedRoute from './components/ProtectedRoute'
 
 //Navigate es para redireccionar
 const App = () => {
@@ -19,12 +20,15 @@ const App = () => {
   const login = () => {
     setUser({
       id:1,
-      name:'John'
+      name:'John',
+      permissions:['analize'],
+      roles:['admin']
     })
   }
 
   const logOut = () => setUser(null)
 
+  //para colocar rutas protegidas que esten al mismo nivel
   return (
   <Router>
 
@@ -36,20 +40,34 @@ const App = () => {
 
     <Navigation/>
     <Routes>
-      <Route path='/landing' element={<LandingPage/>} />
       <Route index element={<LandingPage/>} />
-      <Route path='/home' element={<HomePage user={user}/>}/>
+      <Route path='/landing' element={<LandingPage/>} />
+      <Route element={<ProtectedRoute isAllowed={!!user}/>}>
+        <Route path='/home' element={<HomePage/>}/>
+        <Route path='/dashboard/*' element={<Dashboard/>}>
+      </Route>
       <Route path='/about/*' element={<AboutPage/>} />
       <Route path='/founders/*' element={<FoundersPage/>}/>
       <Route path='/store' element={<StorePage/>} />
       <Route path='/tienda' element={<Navigate to='/store'/>} />
-      <Route path='/dashboard/*' element={<Dashboard/>}>
         <Route path='ozuna/*' element={<><Link to='daddy'>daddy</Link><Outlet/></>}>
           <Route path='daddy' element={<h3>Daddy</h3>}/>
         </Route>
       </Route>
-      <Route path='/analytics' element={<AnalyticsPage/>}></Route>
-      <Route path='/admin' element={<Admin/>}></Route>
+      <Route path='/analytics' element={
+        <ProtectedRoute 
+        isAllowed={!!user && user.permissions.includes('analize')}
+        redirectTo='/home'>
+          <AnalyticsPage/>
+        </ProtectedRoute>
+      }/>
+      <Route path='/admin' element={
+        <ProtectedRoute 
+        isAllowed={!!user && user.roles.includes('admin')}
+        redirectTo='/home'>
+          <Admin/>
+        </ProtectedRoute>
+      }/>
       <Route path='/store/:id' element={<ProductPage/>} />
       <Route path='*' element={<NotFoundPage/>} />
     </Routes>

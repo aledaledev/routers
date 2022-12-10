@@ -1,6 +1,5 @@
 import React from 'react'
-import { Link, Route, Routes } from 'react-router-dom'
-import FoundersPage from './FoundersPage'
+import { Link } from 'react-router-dom'
 
 const AboutPage = () => {
   return (
