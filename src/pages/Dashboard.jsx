@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   return (
     <div>
-        <h2>Dashboard</h2>
+        <h2>Dashboard (private)</h2>
         <button onClick={handleClick}>redirect to home</button>
         <br/>
         <br/>
@@ -28,7 +28,7 @@ const Dashboard = () => {
         <Link to='ozuna'>Ozuna</Link>
         <br/>
         <br/>
-        <Outlet />
+        <Outlet /> 
     </div>
   )
 }
